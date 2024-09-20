@@ -8,7 +8,7 @@ import br.com.lbomfim.domain.Cliente;
  * @author Lucas Bomfim 
  */
 
-public class ClienteDAO extends GenericDAO<Cliente> implements IGenericDAO<Cliente> {
+public class ClienteDAO extends GenericDAO<Cliente, Long> implements IGenericDAO<Cliente, Long> {
 
 	public ClienteDAO() {
 		super(Cliente.class);

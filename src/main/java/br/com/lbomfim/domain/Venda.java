@@ -1,6 +1,10 @@
 package br.com.lbomfim.domain;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -8,8 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -30,9 +35,13 @@ public class Venda {
     @JoinColumn(name = "id_cliente_fk", foreignKey = @ForeignKey(name = "fk_cliente_venda"), referencedColumnName = "id", nullable = false)
     private Cliente cliente;
 
-    @OneToOne
-    @JoinColumn(name = "id_produto_fk", foreignKey = @ForeignKey(name = "fk_produto_venda"), referencedColumnName = "id", nullable = false)
-    private Produto produto;
+    @OneToMany(cascade = {CascadeType.MERGE})
+    @JoinTable(
+            name = "TB_VENDA_PRODUTO",
+            joinColumns = @JoinColumn(name = "id_venda_fk", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_produto_fk", referencedColumnName = "id")
+        )
+    private List<Produto> produtos = new ArrayList<>();
     
     @Column(name = "QUANTIDADE", nullable = false)
     private Integer quantidade;
@@ -42,6 +51,10 @@ public class Venda {
 
     @Column(name = "DATA_VENDA", nullable = false)
     private Instant data_venda;
+    
+    public void adicionar_produto(Produto produto) {
+        this.produtos.add(produto);
+    }
 
 	public Long getId() {
 		return id;
@@ -59,12 +72,12 @@ public class Venda {
 		this.cliente = cliente;
 	}
 
-	public Produto getProduto() {
-		return produto;
+	public List<Produto> getProdutos() {
+		return produtos;
 	}
 
-	public void setProduto(Produto produto) {
-		this.produto = produto;
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
 	}
 
 	public Integer getQuantidade() {

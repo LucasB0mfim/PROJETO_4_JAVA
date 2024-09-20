@@ -8,7 +8,7 @@ import br.com.lbomfim.domain.Produto;
  * @author Lucas Bomfim 
  */
 
-public class ProdutoDAO extends GenericDAO<Produto> implements IGenericDAO<Produto> {
+public class ProdutoDAO extends GenericDAO<Produto, Long> implements IGenericDAO<Produto, Long> {
 
 	public ProdutoDAO() {
 		super(Produto.class);

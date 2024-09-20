@@ -49,26 +49,44 @@ public class VendaTest {
         cliente.setEstado("SP");
         clienteDAO.cadastrar(cliente);
 
-        Produto produto = new Produto();
-        produto.setNome("TV Samsung");
-        produto.setValor(2000d);
-        produto.setQuantidade(5);
-        produtoDAO.cadastrar(produto);
+        Produto produto_1 = new Produto();
+        produto_1.setNome("TV Samsung");
+        produto_1.setValor(2000d);
+        produto_1.setQuantidade(2);
+        produtoDAO.cadastrar(produto_1);
+        
+        Produto produto_2 = new Produto();
+        produto_2.setNome("Playstation 5");
+        produto_2.setValor(3600d);
+        produto_2.setQuantidade(1);
+        produtoDAO.cadastrar(produto_2);
 
+        produto_1 = produtoDAO.consultar(produto_1.getId());
+        produto_2 = produtoDAO.consultar(produto_2.getId());
         
         Venda venda = new Venda();
         venda.setCliente(cliente);
-        venda.setProduto(produto);
-        venda.setQuantidade(produto.getQuantidade());
-        venda.setValor_total(valor_total(produto));
+        venda.adicionar_produto(produto_1);
+        venda.adicionar_produto(produto_2);
+        venda.setQuantidade(quantidade_total(venda));
+        venda.setValor_total(valor_total(venda));
         venda.setData_venda(Instant.now());
         vendaDAO.cadastrar(venda);
     }
     
-    public Double valor_total(Produto produto) {
-    	Integer qtd = produto.getQuantidade();
-    	Double valor = produto.getValor();
-    	Double soma = qtd * valor;
+    public Double valor_total(Venda venda) {
+    	Double soma = 0d;
+    	for (Produto produto : venda.getProdutos()) {
+    		soma += produto.getQuantidade() * produto.getValor();
+    	}
     	return soma;
+    }
+    
+    public Integer quantidade_total(Venda venda) {
+    	Integer qtd = 0;
+    	for (Produto produto : venda.getProdutos()) {
+    		qtd += produto.getQuantidade();
+    	}
+    	return qtd;
     }
 }

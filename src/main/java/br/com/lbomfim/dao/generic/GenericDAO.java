@@ -12,7 +12,7 @@ import javax.persistence.Persistence;
  * @param <T>
  */
 
-public class GenericDAO<T> implements IGenericDAO<T> {
+public class GenericDAO<T, E> implements IGenericDAO<T, E> {
 	private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("JPA");
 	private EntityManager entityManager;
 	private Class<T> persistenteClass;
@@ -103,5 +103,19 @@ public class GenericDAO<T> implements IGenericDAO<T> {
 		} finally {
 			fechar_conexao();
 		}
+	}
+
+	@Override
+	public T consultar(E valor) throws Exception {
+		T entity = null;
+		try {
+			abrir_conexao();
+			entity = entityManager.find(this.persistenteClass, valor);
+		} catch (Exception e) {
+			capturar_erro_conexao();
+		} finally {
+			fechar_conexao();
+		}
+		return entity;
 	}
 }

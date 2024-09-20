@@ -8,7 +8,7 @@ import br.com.lbomfim.domain.Venda;
  * @author Lucas Bomfim 
  */
 
-public class VendaDAO extends GenericDAO<Venda> implements IGenericDAO<Venda> {
+public class VendaDAO extends GenericDAO<Venda, Long> implements IGenericDAO<Venda, Long> {
 
 	public VendaDAO() {
 		super(Venda.class);

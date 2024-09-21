@@ -49,21 +49,21 @@ public class VendaTest {
         cliente.setEstado("SP");
         clienteDAO.cadastrar(cliente);
 
-        Produto produto_1 = new Produto();
-        produto_1.setNome("TV Samsung");
-        produto_1.setValor(2000d);
-        produtoDAO.cadastrar(produto_1);
+        Produto produto1 = new Produto();
+        produto1.setNome("TV Samsung");
+        produto1.setValor(2000d);
+        produtoDAO.cadastrar(produto1);
 
-        Produto produto_2 = new Produto();
-        produto_2.setNome("Playstation 5");
-        produto_2.setValor(3600d);
-        produtoDAO.cadastrar(produto_2);
+        Produto produto2 = new Produto();
+        produto2.setNome("Playstation 5");
+        produto2.setValor(3600d);
+        produtoDAO.cadastrar(produto2);
 
         Venda venda = new Venda();
         venda.setCliente(cliente);
 
-        venda.adicionarProduto(produto_1, 2);
-        venda.adicionarProduto(produto_2, 1);
+        venda.adicionarProduto(produto1, 2);
+        venda.adicionarProduto(produto2, 4);
 
         venda.setData_venda(Instant.now());
         vendaDAO.cadastrar(venda);

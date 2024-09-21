@@ -12,9 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -34,15 +33,10 @@ public class Venda {
     @ManyToOne
     @JoinColumn(name = "id_cliente_fk", foreignKey = @ForeignKey(name = "fk_cliente_venda"), referencedColumnName = "id", nullable = false)
     private Cliente cliente;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "tb_venda_produto",
-        joinColumns = @JoinColumn(name = "venda_id"),
-        inverseJoinColumns = @JoinColumn(name = "produto_id")
-    )
-    private List<QuantidadeProduto> vendaProdutos = new ArrayList<>();
-
+    
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
+    private List<VendaProduto> venda_produtos = new ArrayList<>();
+    
     @Column(name = "VALOR_TOTAL", nullable = false)
     private Double valor_total = 0d;
 
@@ -50,8 +44,8 @@ public class Venda {
     private Instant data_venda;
 
     public void adicionarProduto(Produto produto, Integer quantidade) {
-        QuantidadeProduto vendaProduto = new QuantidadeProduto(produto, quantidade);
-        this.vendaProdutos.add(vendaProduto);
+        VendaProduto vendaProduto = new VendaProduto(produto, this, quantidade);
+        this.venda_produtos.add(vendaProduto);
         this.valor_total += vendaProduto.calcularValor();
     }
 
@@ -71,14 +65,14 @@ public class Venda {
 		this.cliente = cliente;
 	}
 
-	public List<QuantidadeProduto> getVendaProdutos() {
-		return vendaProdutos;
+	public List<VendaProduto> getVenda_produtos() {
+		return venda_produtos;
 	}
 
-	public void setVendaProdutos(List<QuantidadeProduto> vendaProdutos) {
-		this.vendaProdutos = vendaProdutos;
+	public void setVenda_produtos(List<VendaProduto> venda_produtos) {
+		this.venda_produtos = venda_produtos;
 	}
-
+	
 	public Double getValor_total() {
 		return valor_total;
 	}
@@ -93,5 +87,5 @@ public class Venda {
 
 	public void setData_venda(Instant data_venda) {
 		this.data_venda = data_venda;
-	}
+	}	
 }

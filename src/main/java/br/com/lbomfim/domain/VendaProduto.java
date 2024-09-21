@@ -15,8 +15,8 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "TB_QUANTIDADE_PRODUTO")
-public class QuantidadeProduto {
+@Table(name = "TB_VENDA_PRODUTO")
+public class VendaProduto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "venda_produto_seq")
@@ -27,24 +27,45 @@ public class QuantidadeProduto {
     @JoinColumn(name = "produto_id", nullable = false)
     private Produto produto;
 
+    @ManyToOne
+    @JoinColumn(name = "venda_id", nullable = false)
+    private Venda venda;
+
     @Column(name = "quantidade", nullable = false)
     private Integer quantidade;
 
-    public QuantidadeProduto(Produto produto, Integer quantidade) {
+    public VendaProduto(Produto produto, Venda venda, Integer quantidade) {
         this.produto = produto;
+        this.venda = venda;
         this.quantidade = quantidade;
+    }
+    
+    public Double calcularValor() {
+        return this.produto.getValor() * this.quantidade;
     }
 
     public Produto getProduto() {
         return produto;
     }
 
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public Venda getVenda() {
+        return venda;
+    }
+
+    public void setVenda(Venda venda) {
+        this.venda = venda;
+    }
+
     public Integer getQuantidade() {
         return quantidade;
     }
 
-    public Double calcularValor() {
-        return produto.getValor() * quantidade;
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
     }
 }
 

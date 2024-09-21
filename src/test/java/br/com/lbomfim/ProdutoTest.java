@@ -33,7 +33,6 @@ public class ProdutoTest {
 		
 		produto.setNome("Xbox Series X");
 		produto.setValor(3906d);
-		produto.setQuantidade(2);
 		
 		Produto prod_cadastrado = produtoDAO.cadastrar(produto);
 		assertNotNull(prod_cadastrado);

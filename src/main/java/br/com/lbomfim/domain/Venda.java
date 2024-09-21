@@ -13,8 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -35,25 +35,24 @@ public class Venda {
     @JoinColumn(name = "id_cliente_fk", foreignKey = @ForeignKey(name = "fk_cliente_venda"), referencedColumnName = "id", nullable = false)
     private Cliente cliente;
 
-    @OneToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "TB_VENDA_PRODUTO",
-            joinColumns = @JoinColumn(name = "id_venda_fk", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_produto_fk", referencedColumnName = "id")
-        )
-    private List<Produto> produtos = new ArrayList<>();
-    
-    @Column(name = "QUANTIDADE", nullable = false)
-    private Integer quantidade;
+        name = "tb_venda_produto",
+        joinColumns = @JoinColumn(name = "venda_id"),
+        inverseJoinColumns = @JoinColumn(name = "produto_id")
+    )
+    private List<QuantidadeProduto> vendaProdutos = new ArrayList<>();
 
     @Column(name = "VALOR_TOTAL", nullable = false)
-    private Double valor_total;
+    private Double valor_total = 0d;
 
     @Column(name = "DATA_VENDA", nullable = false)
     private Instant data_venda;
-    
-    public void adicionar_produto(Produto produto) {
-        this.produtos.add(produto);
+
+    public void adicionarProduto(Produto produto, Integer quantidade) {
+        QuantidadeProduto vendaProduto = new QuantidadeProduto(produto, quantidade);
+        this.vendaProdutos.add(vendaProduto);
+        this.valor_total += vendaProduto.calcularValor();
     }
 
 	public Long getId() {
@@ -72,20 +71,12 @@ public class Venda {
 		this.cliente = cliente;
 	}
 
-	public List<Produto> getProdutos() {
-		return produtos;
+	public List<QuantidadeProduto> getVendaProdutos() {
+		return vendaProdutos;
 	}
 
-	public void setProdutos(List<Produto> produtos) {
-		this.produtos = produtos;
-	}
-
-	public Integer getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
+	public void setVendaProdutos(List<QuantidadeProduto> vendaProdutos) {
+		this.vendaProdutos = vendaProdutos;
 	}
 
 	public Double getValor_total() {

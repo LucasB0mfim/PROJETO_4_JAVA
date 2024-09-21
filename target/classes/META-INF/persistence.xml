@@ -7,10 +7,10 @@
 		
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		
-		<class>br.com.lbomfim.Venda</class>
-        <class>br.com.lbomfim.Cliente</class>
-        <class>br.com.lbomfim.ProdutoQuantidade</class>
-        <class>br.com.lbomfim.Produto</class>
+		<class>br.com.lbomfim.dao.Cliente</class>
+        <class>br.com.lbomfim.dao.Produto</class>
+        <class>br.com.lbomfim.dao.Venda</class>
+        <class>br.com.lbomfim.dao.VendaProduto</class>
 				
 		<properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" /> <!-- DB Driver -->

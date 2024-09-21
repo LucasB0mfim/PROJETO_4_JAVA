@@ -7,6 +7,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import br.com.lbomfim.exception.AtualizacaoException;
+import br.com.lbomfim.exception.BuscaException;
+import br.com.lbomfim.exception.CadastroException;
+import br.com.lbomfim.exception.ConsultaException;
+import br.com.lbomfim.exception.ExclusaoException;
+
 /**
  * @author Lucas Bomfim
  * @param <T>
@@ -50,13 +56,13 @@ public class GenericDAO<T, E> implements IGenericDAO<T, E> {
 
 	// MÉTODOS DO IGenericDAO
 	@Override
-	public T cadastrar(T entity) throws Exception {
+	public T cadastrar(T entity) throws CadastroException {
 	    try {
 	        abrir_conexao();
 	        entityManager.persist(entity);
 	    } catch (Exception e) {
 	        capturar_erro_conexao();
-	        throw new Exception("ERRO NO CADASTRO: " + e.getMessage());
+	        throw new CadastroException("Erro ao cadastrar: " + e.getMessage());
 	    } finally {
 	        fechar_conexao();
 	    }
@@ -65,13 +71,13 @@ public class GenericDAO<T, E> implements IGenericDAO<T, E> {
 
 
 	@Override
-	public T atualizar(T entity) throws Exception {
+	public T atualizar(T entity) throws AtualizacaoException {
 		try {
 			abrir_conexao();
 			entity = entityManager.merge(entity);
 		} catch (Exception e) {
 			capturar_erro_conexao();
-			throw new Exception("ERRO NA ATUALIZAÇÃO: " + e.getMessage());
+			throw new AtualizacaoException("Erro ao atualizar: " + e.getMessage());
 		} finally {
 			fechar_conexao();
 		}
@@ -79,40 +85,43 @@ public class GenericDAO<T, E> implements IGenericDAO<T, E> {
 	}
 
 	@Override
-	public Collection<T> buscarTodos() throws Exception {
+	public Collection<T> buscarTodos() throws BuscaException {
 		try {
 			abrir_conexao();
 			List<T> lista = entityManager.createQuery(pegar_sql_selecionado(), this.persistenteClass).getResultList();
 			return lista;
 		} catch (Exception e) {
 			capturar_erro_conexao();
-			throw new Exception("ERRO NA BUSCA: " + e.getMessage());
+			throw new BuscaException("Erro ao buscar: " + e.getMessage());
 		} finally {
 			fechar_conexao();
 		}
 	}
 
 	@Override
-	public void excluir(T entity) throws Exception {
+	public T excluir(T entity) throws ExclusaoException {
 		try {
 			abrir_conexao();
 			entity = entityManager.merge(entity);
 			entityManager.remove(entity);
 		} catch (Exception e) {
 			capturar_erro_conexao();
+			throw new ExclusaoException("Erro ao excluir: " + e.getMessage());
 		} finally {
 			fechar_conexao();
 		}
+		return entity;
 	}
 
 	@Override
-	public T consultar(E valor) throws Exception {
+	public T consultar(E valor) throws ConsultaException {
 		T entity = null;
 		try {
 			abrir_conexao();
 			entity = entityManager.find(this.persistenteClass, valor);
 		} catch (Exception e) {
 			capturar_erro_conexao();
+			throw new ConsultaException("Erro ao consultar: " + e.getMessage());
 		} finally {
 			fechar_conexao();
 		}

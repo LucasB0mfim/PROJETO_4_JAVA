@@ -11,5 +11,5 @@ public interface IGenericDAO<T, E> {
 	public T atualizar(T entity) throws Exception;
 	public Collection<T> buscarTodos() throws Exception;
 	public T consultar(E valor) throws Exception;
-	public void excluir(T entity) throws Exception;
+	public T excluir(T entity) throws Exception;
 }
